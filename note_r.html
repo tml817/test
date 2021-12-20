@@ -1,0 +1,1041 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Text Mining </title>
+	<style>
+		/* cspell:disable-file */
+		/* webkit printing magic: print all background colors */
+		html {
+			-webkit-print-color-adjust: exact;
+		}
+
+		* {
+			box-sizing: border-box;
+			-webkit-print-color-adjust: exact;
+		}
+
+		html {
+			margin-top: -7em;
+			margin-right: -10px;
+			margin-bottom: 0px;
+			margin-left: 10Spx;
+			padding: 0;
+		}
+
+		body {
+			margin-top: 0em;
+			margin-right: 0px;
+			margin-bottom: 0px;
+			margin-left: 0px;
+			padding: 0;
+		}
+
+		@media only screen {
+			body {
+				margin: 1em auto;
+				max-width: 700px;
+				color: rgb(15, 15, 12);
+			}
+		}
+
+		div {
+			font-size: 0.7em;
+			font-weight: 600;
+			letter-spacing: 0.25em;
+			margin-bottom: 10em;
+			text-transform: capitalize;
+		}
+
+		div.page-body {
+			max-width: 700px;
+			white-space: pre-line;
+		}
+
+		body {
+			line-height: 1.5;
+			white-space: pre-wrap;
+		}
+
+		a,
+		a.visited {
+			color: inherit;
+			text-decoration: underline;
+		}
+
+		.pdf-relative-link-path {
+			font-size: 80%;
+			color: #444;
+		}
+
+		h1,
+		h2,
+		h3 {
+			letter-spacing: -0.01em;
+			line-height: 1.2;
+			font-weight: 600;
+			margin-bottom: 0;
+			margin-left: 0em;
+
+		}
+
+		.page-title {
+			font-size: 2.5rem;
+			font-weight: 700;
+			margin-top: -1.3em;
+			margin-bottom: -2.3em;
+		}
+
+		h1 {
+			font-size: 1.875rem;
+			margin-top: 1.875rem;
+		}
+
+		h2.title {
+			max-width: 900em;
+			white-space: nowrap;
+
+		}
+
+		h2.content {
+			word-break: normal;
+			;
+		}
+
+		h2 {
+			font-size: 1.5rem;
+			margin-top: 1.5rem;
+		}
+
+		h3 {
+			font-size: 1.25rem;
+			margin-top: 1.25rem;
+		}
+
+		.source {
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			padding: 1.5em;
+			word-break: break-all;
+		}
+
+		.callout {
+			border-radius: 3px;
+			padding: 1rem;
+		}
+
+		figure {
+			margin: 1.25em 0;
+			page-break-inside: avoid;
+		}
+
+		figcaption {
+			opacity: 0.5;
+			font-size: 85%;
+			margin-top: 0.5em;
+		}
+
+		mark {
+			background-color: transparent;
+		}
+
+		.indented {
+			padding-left: 1.5em;
+		}
+
+		hr {
+			background: transparent;
+			display: block;
+			width: 100%;
+			height: 1px;
+			visibility: visible;
+			border: none;
+			border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+		}
+
+		img {
+			max-width: 100%;
+		}
+
+		@media only print {
+			img {
+				max-height: 100vh;
+				object-fit: contain;
+			}
+		}
+
+		@page {
+			margin: 1in;
+		}
+
+		.collection-content {
+			font-size: 0.875rem;
+		}
+
+		.column-list {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.column {
+			padding: 0 1em;
+		}
+
+		.column:first-child {
+			padding-left: 0;
+		}
+
+		.column:last-child {
+			padding-right: 0;
+		}
+
+		.table_of_contents-item {
+			display: block;
+			font-size: 0.875rem;
+			line-height: 1.3;
+			padding: 0.125rem;
+		}
+
+		.table_of_contents-indent-1 {
+			margin-left: 1.5rem;
+		}
+
+		.table_of_contents-indent-2 {
+			margin-left: 3rem;
+		}
+
+		.table_of_contents-indent-3 {
+			margin-left: 4.5rem;
+		}
+
+		.table_of_contents-link {
+			text-decoration: none;
+			opacity: 0.7;
+			border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid rgba(55, 53, 47, 0.09);
+			border-collapse: collapse;
+		}
+
+		table {
+			border-left: none;
+			border-right: none;
+		}
+
+		th,
+		td {
+			font-weight: normal;
+			padding: 0.25em 0.5em;
+			line-height: 1.5;
+			min-height: 1.5em;
+			text-align: left;
+		}
+
+		th {
+			color: rgba(55, 53, 47, 0.6);
+		}
+
+		ol,
+		ul {
+			margin: 0;
+			margin-block-start: 0.6em;
+			margin-block-end: 0.6em;
+		}
+
+		li>ol:first-child,
+		li>ul:first-child {
+			margin-block-start: 0.6em;
+		}
+
+		ul>li {
+			list-style: disc;
+		}
+
+		ul.to-do-list {
+			text-indent: -1.7em;
+		}
+
+		ul.to-do-list>li {
+			list-style: none;
+		}
+
+		.to-do-children-checked {
+			text-decoration: line-through;
+			opacity: 0.375;
+		}
+
+		ul.toggle>li {
+			list-style: none;
+		}
+
+		ul {
+			padding-inline-start: 1.7em;
+		}
+
+		ul>li {
+			padding-left: 0.1em;
+		}
+
+		ol {
+			padding-inline-start: 1.6em;
+		}
+
+		ol>li {
+			padding-left: 0.2em;
+		}
+
+		.mono ol {
+			padding-inline-start: 2em;
+		}
+
+		.mono ol>li {
+			text-indent: -0.4em;
+		}
+
+		.toggle {
+			padding-inline-start: 0em;
+			list-style-type: none;
+		}
+
+		/* Indent toggle children */
+		.toggle>li>details {
+			padding-left: 1.7em;
+		}
+
+		.toggle>li>details>summary {
+			margin-left: -1.1em;
+		}
+
+		.selected-value {
+			display: inline-block;
+			padding: 0 0.5em;
+			background: rgba(206, 205, 202, 0.5);
+			border-radius: 3px;
+			margin-right: 0.5em;
+			margin-top: 0.3em;
+			margin-bottom: 0.3em;
+			white-space: nowrap;
+		}
+
+		.collection-title {
+			display: inline-block;
+			margin-right: 1em;
+		}
+
+		.simple-table {
+			margin-top: 1em;
+			font-size: 0.875rem;
+		}
+
+		.simple-table-header {
+			background: rgb(247, 246, 243);
+			color: black;
+			font-weight: 500;
+		}
+
+		time {
+			opacity: 0.5;
+		}
+
+		.page-header-icon {
+			margin-right: 0.5em;
+		}
+
+		.icon {
+			display: inline-block;
+			max-width: 1.2em;
+			max-height: 1.2em;
+			text-decoration: none;
+			vertical-align: text-bottom;
+			margin-right: 0.5em;
+		}
+
+		img.icon {
+			border-radius: 3px;
+		}
+
+		.user-icon {
+			width: 1.5em;
+			height: 1.5em;
+			border-radius: 100%;
+			margin-right: 0.5rem;
+		}
+
+		.user-icon-inner {
+			font-size: 0.8em;
+		}
+
+		.text-icon {
+			border: 1px solid #000;
+			text-align: center;
+		}
+
+		.page-cover-image {
+			display: block;
+			object-fit: cover;
+			width: 100%;
+			max-height: 20vh;
+		}
+
+		.page-header-icon {
+			font-size: 3rem;
+			margin-bottom: 3rem;
+		}
+
+		.page-header-icon-with-cover {
+			margin-top: -1em;
+			margin-left: 0.01em;
+		}
+
+		.page-header-icon img {
+			border-radius: 1px;
+		}
+
+		.link-to-page {
+			margin: 1em 0;
+			padding: 0;
+			border: none;
+			font-weight: 500;
+		}
+
+		header.major>p {
+			font-size: 0.7em;
+			font-weight: 600;
+			letter-spacing: 0.25em;
+			margin-bottom: 0;
+			text-transform: uppercase;
+		}
+
+		p>.user {
+			opacity: 0.5;
+		}
+
+		td>.user,
+		td>time {
+			white-space: nowrap;
+		}
+
+		input[type="checkbox"] {
+			transform: scale(1.5);
+			margin-right: 0.6em;
+			vertical-align: middle;
+		}
+
+		p {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+			width: 500px;
+			width: auto;
+		}
+
+		p.page-body {
+			max-width: 700px;
+			white-space: nowrap;
+			;
+		}
+
+		.image {
+			border: none;
+			margin: 1.5em 0;
+			padding: 0;
+			border-radius: 0;
+			text-align: center;
+		}
+
+		.code,
+		code {
+			background: rgba(135, 131, 120, 0.15);
+			border-radius: 3px;
+			padding: 0.2em 0.4em;
+			border-radius: 3px;
+			font-size: 85%;
+			tab-size: 2;
+		}
+
+		code {
+			color: #eb5757;
+		}
+
+		.code {
+			padding: 1.5em 1em;
+		}
+
+		.code-wrap {
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.code>code {
+			background: none;
+			padding: 0;
+			font-size: 100%;
+			color: inherit;
+		}
+
+		blockquote {
+			font-size: 1.25em;
+			margin: 1em;
+			padding-left: 0.02em;
+			border-left: 1px solid rgb(55, 53, 47);
+		}
+
+		.bookmark {
+			text-decoration: none;
+			max-height: 8em;
+			padding: 0;
+			display: flex;
+			width: 100%;
+			align-items: stretch;
+		}
+
+
+
+		.bookmark-title {
+			font-size: 0.85em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			height: 1.75em;
+			white-space: nowrap;
+		}
+
+		.bookmark-text {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.bookmark-info {
+			flex: 4 1 180px;
+			padding: 12px 14px 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.bookmark-image {
+			width: 33%;
+			flex: 1 1 180px;
+			display: block;
+			position: relative;
+			object-fit: cover;
+			border-radius: 1px;
+		}
+
+		.bookmark-description {
+			color: rgba(55, 53, 47, 0.6);
+			font-size: 0.75em;
+			overflow: hidden;
+			max-height: 4.5em;
+			word-break: break-word;
+		}
+
+		.bookmark-href {
+			font-size: 0.75em;
+			margin-top: 0.25em;
+		}
+
+		.sans {
+			font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+			width: auto;
+		}
+
+		.code {
+			font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+		}
+
+		.serif {
+			font-family: Lyon-Text, Georgia, ui-serif, serif;
+		}
+
+		.mono {
+			font-family: iawriter-mono, Nitti, Menlo, Courier, monospace;
+		}
+
+		.pdf .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR';
+		}
+
+		.pdf .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+		}
+
+		.pdf .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR';
+		}
+
+		.pdf .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+		}
+
+		.highlight-default {
+			color: rgba(55, 53, 47, 1);
+		}
+
+		.highlight-gray {
+			color: rgba(120, 119, 116, 1);
+			fill: rgba(145, 145, 142, 1);
+		}
+
+		.highlight-brown {
+			color: rgba(159, 107, 83, 1);
+			fill: rgba(187, 132, 108, 1);
+		}
+
+		.highlight-orange {
+			color: rgba(217, 115, 13, 1);
+			fill: rgba(215, 129, 58, 1);
+		}
+
+		.highlight-yellow {
+			color: rgba(203, 145, 47, 1);
+			fill: rgba(203, 148, 51, 1);
+		}
+
+		.highlight-teal {
+			color: rgba(68, 131, 97, 1);
+			fill: rgba(108, 155, 125, 1);
+		}
+
+		.highlight-blue {
+			color: rgba(51, 126, 169, 1);
+			fill: rgba(91, 151, 189, 1);
+		}
+
+		.highlight-purple {
+			color: rgba(144, 101, 176, 1);
+			fill: rgba(167, 130, 195, 1);
+		}
+
+		.highlight-pink {
+			color: rgba(193, 76, 138, 1);
+			fill: rgba(205, 116, 159, 1);
+		}
+
+		.highlight-red {
+			color: rgba(212, 76, 71, 1);
+			fill: rgba(225, 111, 100, 1);
+		}
+
+		.highlight-gray_background {
+			background: rgba(241, 241, 239, 1);
+		}
+
+		.highlight-brown_background {
+			background: rgba(244, 238, 238, 1);
+		}
+
+		.highlight-orange_background {
+			background: rgba(251, 236, 221, 1);
+		}
+
+		.highlight-yellow_background {
+			background: rgba(251, 243, 219, 1);
+		}
+
+		.highlight-teal_background {
+			background: rgba(237, 243, 236, 1);
+		}
+
+		.highlight-blue_background {
+			background: rgba(231, 243, 248, 1);
+		}
+
+		.highlight-purple_background {
+			background: rgba(244, 240, 247, 0.8);
+		}
+
+		.highlight-pink_background {
+			background: rgba(249, 238, 243, 0.8);
+		}
+
+		.highlight-red_background {
+			background: rgba(253, 235, 236, 1);
+		}
+
+		.block-color-default {
+			color: inherit;
+			fill: inherit;
+		}
+
+		.block-color-gray {
+			color: rgba(120, 119, 116, 1);
+			fill: rgba(145, 145, 142, 1);
+		}
+
+		.block-color-brown {
+			color: rgba(159, 107, 83, 1);
+			fill: rgba(187, 132, 108, 1);
+		}
+
+		.block-color-orange {
+			color: rgba(217, 115, 13, 1);
+			fill: rgba(215, 129, 58, 1);
+			font-size: 20px;
+			margin-right: 10em;
+		}
+
+		.block-color-yellow {
+			color: rgba(203, 145, 47, 1);
+			fill: rgba(203, 148, 51, 1);
+		}
+
+		.block-color-teal {
+			color: rgba(68, 131, 97, 1);
+			fill: rgba(108, 155, 125, 1);
+		}
+
+		.block-color-blue {
+			color: rgba(51, 126, 169, 1);
+			fill: rgba(91, 151, 189, 1);
+		}
+
+		.block-color-purple {
+			color: rgba(144, 101, 176, 1);
+			fill: rgba(167, 130, 195, 1);
+		}
+
+		.block-color-pink {
+			color: rgba(193, 76, 138, 1);
+			fill: rgba(205, 116, 159, 1);
+		}
+
+		.block-color-red {
+			color: rgba(212, 76, 71, 1);
+			fill: rgba(225, 111, 100, 1);
+		}
+
+		.block-color-gray_background {
+			background: rgba(241, 241, 239, 1);
+		}
+
+		.block-color-brown_background {
+			background: rgba(244, 238, 238, 1);
+		}
+
+		.block-color-orange_background {
+			background: rgba(251, 236, 221, 1);
+		}
+
+		.block-color-yellow_background {
+			background: rgba(251, 243, 219, 1);
+		}
+
+		.block-color-teal_background {
+			background: rgba(237, 243, 236, 1);
+		}
+
+		.block-color-blue_background {
+			background: rgba(231, 243, 248, 1);
+		}
+
+		.block-color-purple_background {
+			background: rgba(244, 240, 247, 0.8);
+		}
+
+		.block-color-pink_background {
+			background: rgba(249, 238, 243, 0.8);
+		}
+
+		.block-color-red_background {
+			background: rgba(253, 235, 236, 1);
+		}
+
+		.select-value-color-pink {
+			background-color: rgba(245, 224, 233, 1);
+		}
+
+		.select-value-color-purple {
+			background-color: rgba(232, 222, 238, 1);
+		}
+
+		.select-value-color-green {
+			background-color: rgba(219, 237, 219, 1);
+		}
+
+		.select-value-color-gray {
+			background-color: rgba(227, 226, 224, 1);
+		}
+
+		.select-value-color-orange {
+			background-color: rgba(250, 222, 201, 1);
+		}
+
+		.select-value-color-brown {
+			background-color: rgba(238, 224, 218, 1);
+		}
+
+		.select-value-color-red {
+			background-color: rgba(255, 226, 221, 1);
+		}
+
+		.select-value-color-yellow {
+			background-color: rgba(253, 236, 200, 1);
+		}
+
+		.select-value-color-blue {
+			background-color: rgba(211, 229, 239, 1);
+		}
+
+		.checkbox {
+			display: inline-flex;
+			vertical-align: text-bottom;
+			width: 16;
+			height: 16;
+			background-size: 16px;
+			margin-left: 2px;
+			margin-right: 5px;
+		}
+
+		.checkbox-on {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+		}
+
+		.checkbox-off {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+		}
+	</style>
+</head>
+
+<body>
+	<article id="3f091157-e261-4712-8f88-87d5c9aef0c8" class="page">
+		<header>
+			<div class="page-header-icon"><span class="icon">🕋</span></div>
+			<h1 class="page-title">Text Mining </h1>
+		</header>
+		<div class="page-body">
+			<h1 id="52ae49d5-6c10-45f3-84d9-f5e7a30cf5f7" class="block-color-orange"><a
+					href="https://www.tidytextmining.com/tidytext.html">The tidy text format | Text Mining with R </a>
+			</h1>
+			<p id="4cbbc785-3597-4b72-b559-6d39ddeb0a51" class="page sans"><a
+					href="https://ithelp.ithome.com.tw/articles/10229981">
+					[R語言]資料視覺化W01─wordcloud - iT邦幫忙::一起幫忙解決難題，拯救IT 人的一天</a></p>
+			<h2 id="307cca11-e5f1-4b86-b095-af4105d31012" class="title sans">R語言當中的tm package</h2>
+			<p id="82af5072-4f1d-4833-a340-0e8c6f9a23ca" class=""><a
+					href="http://yphuang.github.io/blog/2016/03/04/text-mining-tm-package/">R文本挖掘之tm包 - 数据科学沉思录</a></p>
+			<h2 id="050d4134-0b73-4459-841d-705986f4b4fc" class="title sans"><strong>運用tidyverse 包做text mining</strong>
+			</h2>
+			<figure id="a8bfab18-985a-40ed-9f22-a3b88c908e2b" class="image"><img style="width:1086px"
+					src="images/r_pro1_5.png"></a></figure>
+			<h2 class="title"><strong>Contrasting tidy text with other data
+					structures</strong></h2>
+			<p class="title sans">As we stated above, we define the tidy text
+				format as being a table with <strong>one-token-per-row.</strong>Structuring text data in this way means
+				that it conforms to tidy data principles and can be manipulated with a set of consistent tools. This is
+				worth contrasting with the ways text is often stored in text mining approaches.</p>
+			<ul id="85cb9e32-4bf1-456e-bc06-83946488863a" class="bulleted-list">
+				<li style="list-style-type:disc"><strong>String</strong>: Text can, of course, <strong>be stored as
+						strings</strong>, i.e., <strong>character vectors</strong>, within R, and<strong> often text
+						data is first read into memory in this form.</strong></li>
+			</ul>
+			<ul id="dcdd0747-7fb5-42d9-a307-b3e628d14479" class="bulleted-list">
+				<li style="list-style-type:disc"><strong>Corpus</strong>: These types of objects typically contain raw
+					strings annotated with additional metadata and details.</li>
+			</ul>
+			<ul id="7d186912-3c06-4feb-bf8c-5391b841e5d3" class="bulleted-list">
+				<li style="list-style-type:disc"><strong>Document-term matrix</strong>: This is a sparse matrix
+					describing a collection (i.e., a corpus) of documents with<mark class="highlight-orange_background">
+						one row for each document and one column</mark> for each term. The value in the matrix is
+					typically <strong>word count</strong> or tf-idf</li>
+			</ul>
+			<h3 id="d673daba-f61e-48e5-b2d2-0b33630a8316" class="block-color-yellow_background">Workflow Step1
+				把text資料放到Dataset裡 使用 dplyr </h3>
+			<pre id="e7cfc1ae-2a61-4b62-90a1-ab46f017b427" class="code"><code>text &lt;- c(&quot;Because I could not stop for Death -&quot;,
+          &quot;He kindly stopped for me -&quot;,
+          &quot;The Carriage held but just Ourselves -&quot;,
+          &quot;and Immortality&quot;)
+library(dplyr)
+text_df &lt;- tibble(line = 1:4, text = text)</code></pre>
+			<p id="d73c2d99-1aec-4695-b92b-9a26b4353d11" class=""><mark class="highlight-teal">A tibble is a modern
+					class of data frame within R, available in the dplyr and tibble packages, that has a convenient
+					print method, will not convert strings to factors, and does not use row names. Tibbles are great for
+					use with tidy tools.</mark></p>
+			<h3 id="b452a19c-0686-48a2-ab00-87b7e6f2a9df" class=""><strong>We can’t filter out words or count which
+					occur most frequently</strong></h3>
+			<p id="7c372dbf-6f30-4dd1-ae4e-6761ec5e1b8e" class="">since each row is made up of multiple combined words.
+			</p>
+			<h3 id="2848f2de-ef3b-4efe-8ad5-1cf35dd7147d" class="block-color-yellow_background">Workflow Step2
+				把text資料放到Dataset裡 使用 <mark class="highlight-teal_background">dplyr</mark> </h3>
+			<ul id="aa04937c-1efb-4355-aedb-9d6ad05b0762" class="toggle">
+				<li>
+					<details open="">
+						<summary>Convert to <strong>one-token-per-document-per-row</strong>.</summary>
+						<p id="52e384f4-9d0d-40d9-affa-6e3b88d0e45e" class=""><strong> </strong><mark
+								class="highlight-red"><strong>Token is a meaningful unit of text, most often a word,
+									that we are interested in using for further analysis</strong></mark></p>
+					</details>
+				</li>
+			</ul>
+			<div id="9967acd0-7d71-4272-b467-a8be0cdf4205" class="column-list">
+				<div id="ea0ad106-bc7a-4819-a1c2-2ef185125649" style="width:68.75%" class="column">
+					<pre id="25077015-c64d-4bce-a447-14c9a671637b" class="code"><code>library(tidytext)
+
+text_df %&gt;%
+  unnest_tokens(word, text) 
+ ##unnest_tokens中 word 是output後的變數</code></pre>
+				</div>
+				<div id="aa2ce68c-4d26-425b-a6bb-c0447b3d220d" style="width:31.250000000000007%" class="column">
+					<figure id="2636956b-cc0c-476c-8f8e-2145dc8bed10" class="image"><a><img style="width:336px"
+								src="images/r_pro1_1.png" /></a></figure>
+				</div>
+			</div>
+			<h3 id="226d09dc-6c1d-4949-a4b1-71460933ff1f" class="">Example : loading the book</h3>
+			<ol type="1" id="58ea9b44-7a94-4952-991a-0a4f9e45830b" class="numbered-list" start="1">
+				<li>Data Preprocessing <p id="c403d5bf-5cd7-4428-a710-80de6b1753b7" class="">The janeaustenr package
+						provides these texts in a one-row-per-line format, where a line in this context is analogous to
+						a literal printed line in a physical book.</p>
+					<pre id="365ee726-bc6d-4ac1-8e4b-674986106483" class="code"><code>library(janeaustenr)
+library(dplyr)
+library(stringr)
+
+original_books &lt;- austen_books() %&gt;%
+  group_by(book) %&gt;%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(str_detect(text, 
+                                     regex(&quot;^chapter [\\divxlc]&quot;,
+                                           ignore_case = TRUE)))) %&gt;%
+  ungroup()</code></pre>
+					<figure id="4e2a9941-03d3-430f-a38b-4a378ad757d3" class="image"><a
+							href="Text%20Mining%20a8bfab18985a40ed9f22a3b88c908e2b/Untitled%202.png"><img
+								style="width:432px" src="images/r_pro1_4.png"></a></figure>
+					<pre id="5a1d094f-fd59-41ec-97df-2b7896e0b8e1" class="code"><code>#mutate
+gapminder %&gt;%
+  mutate(pop_in_thousands = pop / 1000)</code></pre>
+				</li>
+			</ol>
+			<ol type="1" id="0097dc62-6bbb-48da-8691-cf1792738e38" class="numbered-list" start="2">
+				<li>Restructure it in the <strong>one-token-per-row</strong> format</li>
+			</ol>
+			<div id="eeec7af4-a67d-41bc-b3c7-e8fe202df7a6" class="column-list">
+				<div id="82753283-0ca3-4d91-bae5-91b167bab295" style="width:50%" class="column">
+					<pre id="c2b4a8ab-27b2-4a25-9ab2-13f7d35e579d" class="code"><code>library(tidytext)
+tidy_books &lt;- original_books %&gt;%
+  unnest_tokens(word, text) 
+#這個word就是df的word col name</code></pre>
+					<p id="7b56060f-742d-4f73-be9e-c9c8f1cb2e57" class="">
+						這邊使用的<code><strong>unnest_tokens</strong></code><strong>是從unnset_tokerns從</strong><a
+							href="https://github.com/ropensci/tokenizers"><strong>tokenize
+								package</strong></a><strong>得出來的</strong></p>
+					<p id="14ef58aa-cb73-4fab-9755-e9cc86dc4da5" class="">
+					</p>
+					<p id="398942b2-4c87-4daa-b625-cbc01fe30afb" class="">
+					</p>
+				</div>
+				<div id="cedb5d2a-5fa0-4726-873a-fbbfb0eced65" style="width:50%" class="column">
+					<figure id="d88b51fa-2115-4005-8202-20cae4f158ac" class="image"><img style="width:288px"
+							src="images/r_pro1_3.png" /></a></figure>
+				</div>
+			</div>
+			<p id="46f30a3c-4f93-4b22-8297-bbb6283c03da" class="major">
+				Data is in one-word-per-row format, we can
+				manipulate it with tidy tools like dplyr. Often in text analysis, we will want to remove stop words;
+				stop words are words that are not useful for an analysis, typically extremely common words such as
+				“the”, “of”, “to”,
+				and so forth in English. We can remove stop words (kept in the tidytext dataset<code>stop_words</code>)
+				with an<code>anti_join()</code></a>.
+				<a href="https://dplyr.tidyverse.org/reference/filter-joins.html"></a>
+			</p>
+			<p id="e8ce088e-81bd-42e8-91c3-b8dfb9dbcd54" class=""><a
+					href="https://www.rdocumentation.org/packages/stopwords/versions/2.3"><code>stop_words</code></a>是一個已經被寫模組的人設定好默認不太需要備使用到的字
+			</p>
+			<pre id="40d7a408-beda-4184-baf3-27a950ba4df6" class="code"><code>data(stop_words)
+
+tidy_books &lt;- tidy_books %&gt;%
+  anti_join(stop_words) 
+
+tidy_books %&gt;% ##to find the most common words in all the books as a whole.
+  count(word, sort = TRUE)  </code></pre>
+			<div id="a8ea937c-acb8-406f-84ec-0a807a1cf6e3" class="column-list">
+				<div id="74617904-ce70-4e54-a279-158005ea8803" style="width:50%" class="column">
+					<p id="23130ea4-b088-41a1-a66b-ad388cfe38ed" class=""><strong>視覺化</strong></p>
+					<p id="471f522b-957c-40cb-b435-e9c458c0a363" class="">
+					</p>
+					<p id="02a71000-2406-4826-b267-639a1992c84f" class="">This allows us to pipe this directly to the
+						ggplot2 package, for example to create a visualization of the most common words.</p>
+				</div>
+				<div id="1d91e11d-04cb-404e-b6b0-db7e00a3a6f1" style="width:49.99999999999999%" class="column">
+					<pre id="109a808b-4587-4f56-843e-709137583baf" class="code code-wrap"><code>library(ggplot2)
+tidy_books %&gt;%
+count(word, sort = TRUE) %&gt;%
+filter(n &gt; 600) %&gt;%
+mutate(word =reorder(word, n)) %&gt;%
+ggplot(aes(n, word)) +
+geom_col() +
+labs(y = NULL)</code></pre>
+				</div>
+			</div>
+			<div id="a279b2af-4ae8-4bad-8471-7be6da51c400" class="column-list">
+				<div id="21e2d4f7-687c-4cf5-81fa-4516439cf62c" style="width:37.5%" class="column">
+					<p id="0b779d2d-a864-480a-b77e-719de3e0aafc" class=""><strong>Quick Review</strong></p>
+					<figure id="741639b4-4f36-4271-a023-c9538bb5d8b4" class="image">
+						<imgstyle="width:240px" src="images/r_pro1_3.png" /></a>
+					</figure>
+				</div>
+				<div id="44e43c25-98ba-4203-8546-a5cbb74d38ad" style="width:62.5%" class="column">
+					<pre id="d56005b0-083c-42f3-89d3-4981c5efbe9d" class="code"><code>
+library(gutenbergr)
+hgwells &lt;- gutenberg_download(c(36, 5230, 159))
+tidy_hgwells &lt;- hgwells %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  anti_join(stop_words)
+
+tidy_hgwells %&gt;%
+  count(word, sort = TRUE)
+</code></pre>
+				</div>
+			</div>
+		</div>
+	</article>
+</body>
+
+</html>
